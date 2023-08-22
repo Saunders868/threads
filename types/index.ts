@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 export type sidebarLink = {
   imgURL: string;
   route: string;
@@ -25,4 +27,24 @@ export type UserDataT = {
   name: string;
   bio: string;
   image: string | undefined;
+};
+
+export type ThreadCardT = {
+  currentUserId: string;
+  id: mongoose.Schema.Types.ObjectId;
+  author: {
+    name: string;
+    image: string;
+    id: string;
+  };
+  content: string;
+  community: {
+    name: string;
+    image: string;
+    id: string;
+  } | null;
+  comments: { author: { image: string } }[];
+  createdAt: Date;
+  parentId: mongoose.Schema.Types.ObjectId;
+  isComment?: boolean;
 };

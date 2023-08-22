@@ -20,6 +20,8 @@ import Image from "next/image";
 import { ChangeEvent, useState } from "react";
 import { isBase64Image } from "@/lib/utils";
 import { useUploadThing } from "@/lib/valildations/uploadthing";
+import { updateUserHandler } from "@/lib/actions/user.actions";
+import { usePathname, useRouter } from "next/navigation";
 
 interface AccountProfileT {
   user: UserDataT;
@@ -29,6 +31,8 @@ interface AccountProfileT {
 function AccountProfile({ user, btnTitle }: AccountProfileT) {
   const [files, setFiles] = useState<File[]>([]);
   const { startUpload } = useUploadThing("media");
+  const router = useRouter();
+  const pathname = usePathname();
 
   const form = useForm({
     resolver: zodResolver(UserValidation),
@@ -80,6 +84,20 @@ function AccountProfile({ user, btnTitle }: AccountProfileT) {
     }
 
     // update user profile
+    await updateUserHandler({
+      userId: user.id || "",
+      username: values.username,
+      name: values.name,
+      bio: values.bio,
+      image: values.profile_photo,
+      path: pathname,
+    });
+
+    if (pathname === '/profile/edit') {
+      router.back();
+    } else {
+      router.push("/");
+    }
   }
   return (
     <Form {...form}>
@@ -141,6 +159,7 @@ function AccountProfile({ user, btnTitle }: AccountProfileT) {
                   {...field}
                 />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -156,6 +175,7 @@ function AccountProfile({ user, btnTitle }: AccountProfileT) {
               <FormControl>
                 <Input type="text" className="account-form_input" {...field} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -171,6 +191,7 @@ function AccountProfile({ user, btnTitle }: AccountProfileT) {
               <FormControl>
                 <Textarea rows={10} className="account-form_input" {...field} />
               </FormControl>
+              <FormMessage />
             </FormItem>
           )}
         />
