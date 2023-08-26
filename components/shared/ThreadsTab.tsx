@@ -12,7 +12,7 @@ async function ThreadsTab({
   accountId: string;
   accountType: string;
 }) {
-  const userThreads: IUserThreads = await getUserThreadsHandler(currentUserId);
+  const userThreads: IUserThreads = await getUserThreadsHandler(accountId);
 
   if (!userThreads) {
     redirect("/");
