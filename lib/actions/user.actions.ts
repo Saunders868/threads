@@ -2,7 +2,7 @@
 
 import { IUpdateUser } from "@/types/user.type";
 import { connectToDB } from "../connect";
-import { getUser, updateUser } from "../services/user.service";
+import { getUser, getUserThreads, updateUser } from "../services/user.service";
 import { revalidatePath } from "next/cache";
 
 export async function updateUserHandler({
@@ -38,7 +38,7 @@ export async function updateUserHandler({
   }
 }
 
-export async function getUserHandler(userId:string) {
+export async function getUserHandler(userId: string) {
   try {
     await connectToDB();
 
@@ -46,5 +46,16 @@ export async function getUserHandler(userId:string) {
     return user;
   } catch (error: any) {
     throw new Error(`Failed to get user: ${error.message}`);
+  }
+}
+
+export async function getUserThreadsHandler(userId: string) {
+  try {
+    await connectToDB();
+
+    const threads = await getUserThreads(userId);
+    return threads;
+  } catch (error: any) {
+    throw new Error(`Failed to get user threads: ${error.message}`);
   }
 }
